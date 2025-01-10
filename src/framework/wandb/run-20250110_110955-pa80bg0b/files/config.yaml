@@ -1,0 +1,62 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    python_version: 3.8.1
+    cli_version: 0.16.5
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1736474995.0
+    t:
+      1:
+      - 1
+      - 5
+      - 53
+      - 55
+      - 77
+      2:
+      - 1
+      - 5
+      - 53
+      - 55
+      - 77
+      3:
+      - 13
+      - 23
+      4: 3.8.1
+      5: 0.16.5
+      8:
+      - 5
+      13: linux-x86_64
+seed:
+  desc: null
+  value: 42
+data_path:
+  desc: null
+  value: ../data/sp500/
+mode:
+  desc: null
+  value: train
+key:
+  desc: null
+  value: 420ba3a37f4de92bf7fcf501ab5b24877d1d9cc1
+d:
+  desc: null
+  value: 32
+nh:
+  desc: null
+  value: 4
+dr:
+  desc: null
+  value: 0.1
+lr:
+  desc: null
+  value: 0.0001
+edges:
+  desc: null
+  value: 64
+fusion:
+  desc: null
+  value: sum

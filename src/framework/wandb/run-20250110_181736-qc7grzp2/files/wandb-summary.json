@@ -1,0 +1,1 @@
+{"epoch": 299, "Train Loss (Phase 1)": 0.027291563302574175, "Train ACC (Phase 1)": 0.7211551647296788, "_timestamp": 1736502952.9889824, "_runtime": 2296.376448392868, "_step": 599, "Test Loss (Phase 1)": 0.03272634833233386, "Test ACC (Phase 1)": 0.5623452562819364, "_wandb": {"runtime": 2296}}
