@@ -15,7 +15,7 @@ Install all packages:
 pip install -r requirements.txt
 ```
 
-## Training
+## Training and Evaluation
 ```
 cd ./src/framework
 ```
