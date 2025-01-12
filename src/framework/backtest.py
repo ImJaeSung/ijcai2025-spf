@@ -47,7 +47,7 @@ class Backtest():
             dict: Performance metrics including total return, Sharpe ratio, and MDD.
         """
         ground_truth = pd.concat([gts[key]['trend_return'] for key in gts.keys()], axis=1)
-        ground_truth.columns = ground_truth.keys()
+        ground_truth.columns = gts.keys()
 
         # Ensure predictions and ground_truths have the same structure
         assert predictions.shape == ground_truth.shape, "Shape mismatch between predictions and ground_truths"

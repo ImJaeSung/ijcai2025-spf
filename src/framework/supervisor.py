@@ -50,6 +50,7 @@ class Supervisor():
         # Backtest
         self.backtest_config = config['backtest']
         self.res_path = self.backtest_config['res_path']
+        os.makedirs(self.res_path, exist_ok=True)
         self.bt_top_k = self.backtest_config['top_k']
         self.start_backtest = self.backtest_config['start_backtest']
         self.backtest_month = self.backtest_config['backtest_month']
@@ -62,6 +63,7 @@ class Supervisor():
         self.seed = config['train']['seed']
         self.batch_size = config['train']['batch_size']
         self.save_path = config['train']['save_path']
+        os.makedirs(self.save_path, exist_ok=True)
         self.confidence_threshold = config['train']['confidence_threshold']
         self.early_stop = config['train']['early_stop']
         self.device = device
@@ -214,13 +216,12 @@ class Supervisor():
             # remainder = len(input_backtest) % self.batch_size
             # preds[-remainder:] = self.model(input_backtest[-remainder:]).cpu().detach().numpy()
     
-            preds = pd.DataFrame(preds, columns=gt_backtest.keys())
+            preds = pd.DataFrame(preds, columns=gt_backtest.keys(), index=gt_backtest[list(gt_backtest.keys())[0]].index)
             bt = Backtest(top_k=self.bt_top_k)
             final_report = bt.backtesting(preds, gt_backtest)
-            performance = pd.DataFrame(final_report)
             print("Finish!")
 
-        return performance, dict_metrics
+        return final_report, dict_metrics
 
 
     def eval(self, data_loader):
@@ -333,22 +334,21 @@ class Supervisor():
 
             self.phase += 1
 
-            break
-
         combined_results = pd.concat(all_phase_results)
         mean_values = combined_results.mean(axis=0).to_frame().T
         mean_values.index = ['Mean']
         final_results = pd.concat([combined_results, mean_values])
         final_results = final_results.T
         final_results.index = ['IC', 'ICIR', 'RankIC', 'RankICIR', 'ACC', 'Prec@K', 'Return', 'SR', 'MDD']
-        final_results.to_csv(f"{self.res_path}", index=False)
+        final_results.to_csv(f"{self.res_path}{self.run_name}.csv", index=True)
         
         if wandb.run is not None:
-            artifact.add_file(f"{self.save_path}")
+            artifact.add_dir(f"{self.save_path}")
             wandb.log_artifact(artifact)
             print("Upload W&B Artifact!")
 
-            res_table = wandb.Table(dataframe=final_results)
+            final_results_with_index = final_results.reset_index() # index upload
+            res_table = wandb.Table(dataframe=final_results_with_index)
             wandb.log({"Test Result": res_table})
             print("Upload Final Results!")
 

@@ -143,13 +143,16 @@ class DataLoadBase():
     def gen_backtest_data(self, start_date, end_date):
         gts = {}
         inputs = []
-        inputs_storage = {}
-        for sym in self.symbols:
+        # inputs_storage = {}
+        for idx, sym in enumerate(self.symbols):
             data = get_data_baseline(sym, start_date, end_date, self.his_window + self.max_slow_period + 5, self.n_step_ahead)
-            inputs_storage[sym] = data
-        inputs_storage = self.fill_missing_data(inputs_storage)
-        for sym in inputs_storage:
-            df, df_x, _ = self.preprocess_data(inputs_storage, sym, self.indicators)
+            # inputs_storage[sym] = data
+
+            if idx == 0:
+                max_data_trade_index = data.index
+            data = self.fill_missing_data(data, max_data_trade_index)
+        
+            df, df_x, _ = self.preprocess_data(data)
             df = df.iloc[self.his_window:]
             df_x = df_x.to_numpy()
             gts[sym] = df[["open", "high", "low", "close", "volume", "trend_return"]]
