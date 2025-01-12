@@ -1,4 +1,5 @@
 # Dynamic High-Order Relations and Event-Driven Temporal Modeling for Stock Price Forecasting
+Implementation environment: Linux with NVIDIA RTX A6000 and Python 3.8.1
 
 ## Install Environments
 Init environment using conda:
@@ -15,6 +16,9 @@ pip install -r requirements.txt
 ```
 
 ## Training
+```
+cd ./src/framework
+```
 ```
 python main.py
 ```
