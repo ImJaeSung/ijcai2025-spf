@@ -5,10 +5,6 @@ import torch
 import random
 import os
 
-# def update_config_to_yaml(source_config, target_config):
-#     with open(target_config, 'w') as file:
-#         yaml.dump(source_config, file)
-
 def add_month(date, months=1):
     new_month = (date.month + months - 1) % 12 + 1
     new_year = date.year + (date.month + months - 1) // 12

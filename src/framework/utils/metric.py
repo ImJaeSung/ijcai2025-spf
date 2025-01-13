@@ -132,21 +132,3 @@ class RMSELoss(nn.Module):
 
         return rmse
 
-
-# def mse_ranking_loss(true, pred, num_stocks, alpha):
-#     device = pred.device
-#     all_one = torch.ones(num_stocks, 1, dtype=torch.float32).to(device)
-#     reg_loss = F.mse_loss(true, pred)
-#     pre_pw_dif = torch.sub(
-#         pred @ all_one.t(),
-#         all_one @ pred.transpose(1,2)
-#     )
-#     gt_pw_dif = torch.sub(
-#         all_one @ true.transpose(1,2),
-#         true @ all_one.t()
-#     )
-#     rank_loss = torch.mean(
-#         F.relu(pre_pw_dif * gt_pw_dif)
-#     )
-#     loss = reg_loss + alpha * rank_loss
-#     return loss

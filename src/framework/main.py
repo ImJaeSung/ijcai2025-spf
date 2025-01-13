@@ -90,14 +90,15 @@ if __name__ == '__main__':
     config['data']['data_path'] = args.data_path
     config['data']['symbols'] = get_tickers_sp500()
 
-    project_name = 'IJCAI25'
+    project_name = 'your_project'
+    entity = "your_entity"
     current_time = datetime.now()
     run_name = current_time.strftime("%y%m%d-%H%M")
 
     if key is not None:
 
         wandb.login(key=key)
-        wandb.init(project=project_name, entity='99rlwjd', name=run_name)
+        wandb.init(project=project_name, entity=entity, name=run_name)
         wandb.config.update(args)
 
     config['run_name'] = run_name

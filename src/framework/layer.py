@@ -98,9 +98,7 @@ class IntraStockAttention(nn.Module):
             attn_score = attn_score.masked_fill(mask, float('-inf'))
         attn_score = torch.softmax(attn_score, dim=-1)
 
-        # apply the different dropout for each attention scores
         attn_score = attn_score.reshape(self.num_heads, self.num_stocks, self.sequence_len, self.sequence_len) # (h, S, T, T)
-        # Dropout을 in-place가 아닌 out-of-place 방식으로 적용
         attn_score_list = []
         for i in range(self.num_heads):
             attn_score_list.append(self.attn_dropout[i](attn_score[i]))
@@ -190,9 +188,7 @@ class IntensityFunction(nn.Module):
 
         return intensity
     
-# """
-# 일반적인 Temporal Attention Mechanism: 시퀀스의 마지막 시점을 query로 사용해서 시퀀스 차원을 aggregation하는 방법
-# """
+
 class TemporalAttention(nn.Module):
     def __init__(self, d_model, dropout=0.5):
         super(TemporalAttention, self).__init__()
