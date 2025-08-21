@@ -19,22 +19,31 @@ class DataLoad(DataLoadBase):
         self.indicators = config['data']['indicators']
         self.include_target = config["data"]["include_target"]
         self.target_col = config["data"]["target_col"]
-        self.max_slow_period = max([max(indi.values()) for indi in self.indicators.values() if indi.values()])
+        self.max_slow_period = max(
+            [max(indi.values()) for indi in self.indicators.values() if indi.values()]
+        )
         self.n_step_ahead = config['data']['n_step_ahead']
         self.outlier_threshold = config["data"]["outlier_threshold"]
         self.data_path = config['data']['data_path']
         self.cuda = config['model']['cuda']
         self.start_train = config['data']['start_train']
 
-    def get_data(self, 
-                 start_train, 
-                 end_train, 
-                 start_test, 
-                 end_test):
+    def get_data(
+        self, 
+        start_train, 
+        end_train, 
+        start_test, 
+        end_test
+    ):
+        
         path_data = f"{self.data_path}/train/train_{start_train}.npz"
-        path_hyper = f"./{self.data_path}/hypergraph/hypergraphsnapshot_{start_train}.pkl"
+        # path_hyper = f"./{self.data_path}/hypergraph/hypergraphsnapshot_{start_train}.pkl"
+        path_hyper = f"{self.data_path}/hypergraph/hypergraphsnapshot_{start_train}.pkl"
+        
         if not os.path.exists(path_data):
             X_train_full, y_train_full, X_test_full, y_test_full, hypergraphsnapshot, edges, buy_prob_threshold, sell_prob_threshold = self.split_train_test(start_train, end_train, start_test, end_test)
+            
+            os.makedirs(f"{self.data_path}/train")
             np.savez(path_data, x_train=X_train_full, y_train=y_train_full, x_test=X_test_full, y_test=y_test_full, edges=edges, buy_thres=buy_prob_threshold, sell_thres=sell_prob_threshold)
             if not os.path.exists(path_hyper):
                 with open(path_hyper, "wb") as f:
@@ -68,22 +77,19 @@ class DataLoad(DataLoadBase):
             y_test_full = torch.tensor(y_test_full, dtype=torch.float32)
         return X_train_full, y_train_full[:,:,-1], X_test_full, y_test_full[:,:,-1], hypergraphsnapshot, torch.LongTensor(edges), buy_prob_threshold, sell_prob_threshold
 
-    def split_train_test(self,
-                          start_train, 
-                          end_train,
-                          start_test,
-                          end_test):
-        
-        # X_train_storage = []
-        # X_test_storage = []
-        # y_train_storage = []
-        # y_test_storage = []
+    def split_train_test(
+        self,
+        start_train, 
+        end_train,
+        start_test,
+        end_test):
+
         train_data_storage = {}
         test_data_storage = {}
         buy_prob_threshold = []
         sell_prob_threshold = []
 
-        for idx, sym in tqdm(enumerate(self.symbols)):
+        for idx, sym in tqdm(enumerate(self.symbols), desc="data splitting..."):
 
             train_data = get_data_baseline(sym, start_train, end_train, self.his_window + self.max_slow_period, self.n_step_ahead)
             test_data = get_data_baseline(sym, start_test, end_test, self.his_window + self.max_slow_period, self.n_step_ahead)

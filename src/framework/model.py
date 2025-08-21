@@ -6,7 +6,18 @@ from supervisor import Supervisor
 
 
 class Model(nn.Module):
-    def __init__(self, snapshot, num_stocks, num_features, d_model, num_heads, sequence_len, num_edges, dropout=0.5, fusion_mode="sum"):
+    def __init__(
+        self, 
+        snapshot, 
+        num_stocks, 
+        num_features, 
+        d_model, 
+        num_heads, 
+        sequence_len,
+        num_edges, 
+        dropout=0.5,
+        fusion_mode="sum"
+    ):
         super(Model, self).__init__()
 
         self.snapshot = snapshot
@@ -127,16 +138,18 @@ class Models(Supervisor):
 
         print("Model Initialization...")
 
-        self.model = Model(snapshot=self.snapshot,
-                           num_stocks=self.num_stocks,
-                           num_features=self.num_features,
-                           d_model=self.d_model,
-                           num_heads=self.num_heads,
-                           sequence_len=self.sequence_len,
-                           num_edges=self.num_edges,
-                           dropout=self.dropout,
-                           fusion_mode=self.fusion_mode)
-        
+        self.model = Model(
+            snapshot=self.snapshot,
+            num_stocks=self.num_stocks,
+            num_features=self.num_features,
+            d_model=self.d_model,
+            num_heads=self.num_heads,
+            sequence_len=self.sequence_len,
+            num_edges=self.num_edges,
+            dropout=self.dropout,
+            fusion_mode=self.fusion_mode
+        )
+
         super(Models, self).init_model()
 
     def _snapshot(self, snapshot):
